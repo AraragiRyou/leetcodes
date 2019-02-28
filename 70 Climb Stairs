@@ -1,0 +1,80 @@
+问题描述
+You are climbing a stair case. It takes n steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+Note: Given n will be a positive integer.
+
+这是一道动态规划的题目。
+
+对于n阶的台阶，一次可以迈1-2步，有多少种登顶的方法。
+
+首先可以试着采用递归的方法，在对题目的规律未知的情况下，进行暴力解题
+
+假设我们需要爬一个n阶的台阶，当你距离台阶有0步或者1步的时候，就只有一种方法可以登顶。
+
+于是我们可以将这两种情况视为次数累加的一个判断条件，即 if( 当前剩余台阶=0 or 1) then count++
+
+剩下的就是设计一个遍历，用1or2作为步进，初始值剩余台阶=n
+
+用调用f(n-1）+ f(n-2)的方法启动遍历:
+
+class Solution:
+    def climbStairs(self, n):　//self为python在类中定义函数需要增加的一个引用值，相当于java的this
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n==0 or n==1:
+          return 1
+        
+        return self.climbStairs(n-1)+self.climbStairs(n-2) //调用类中函数使用self.
+        
+总结
+递归法是给定一个终结条件，用函数反复的方法来实现对所有可能情况的遍历。
+但，慢，超时。
+时间复杂度2^n,空间复杂度2^n
+        
+第二种方法，动态规划。
+  
+首先研究问题的规律，
+对于有n阶台阶的情况，其解法的数量等于n-1阶的情况和n-2阶情况之和。
+
+使用函数调用，不调用函数。
+加入一个result数组来储存n=1,2,3,4..n时的解。
+给予result数组初始值[1,1]来保证result[n-2]时不会溢出。 
+        
+class Solution:
+    def climbStairs(self, n):　//self为python在类中定义函数需要增加的一个引用值，相当于java的this
+        """
+        :type n: int
+        :rtype: int
+        """
+        result=[1,1]
+        i=2
+        while i<n+1:
+            result.append("")
+            result[i]=result[i-1]+result[i-2] 
+            i +=1
+        
+        return result[n]
+        
+进一步简化，
+
+class Solution:
+    def climbStairs(self, n):　//self为python在类中定义函数需要增加的一个引用值，相当于java的this
+        """
+        :type n: int
+        :rtype: int
+        """
+        result=[1,1]
+        i=2
+        while i<n+1:
+            temp=result[0]
+            result[0]=result[0]+result[1]
+            result[1]=temp
+            
+            i +=1
+        
+        return result[0]
+
